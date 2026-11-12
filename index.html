@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Event Team Board</title>
+<title>Event To-Do List</title>
 <style>
 :root{--bg:#f3f6f4;--card:#ffffff;--ink:#16302b;--mute:#5d726d;--line:#d5e0dc;--brand:#0f5c4d;--gold:#c8922a;--done:#8aa39d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -34,40 +34,10 @@ li.done .txt{text-decoration:line-through;color:var(--done)}
 button.btn{font:inherit;font-weight:600;padding:12px 18px;border:0;border-radius:10px;background:var(--brand);color:#fff;cursor:pointer}
 button.ghost{background:none;color:var(--mute);border:1px solid var(--line);margin-top:14px}
 .all{display:none;margin-top:16px;padding:14px;border-radius:12px;background:var(--gold);color:#1d1500;font-weight:700;text-align:center}
-
-:root{--bg:#f3f6f4;--card:#fff;--ink:#16302b;--mute:#5d726d;--line:#d5e0dc;--brand:#0f5c4d;--gold:#c8922a;--grid:#cfdcd7;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a17;--card:#162622;--ink:#e8f1ee;--mute:#9bb3ad;--line:#2a3f3a;--brand:#3fbfa3;--gold:#e0b04f;--grid:#2a3f3a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0e1a17;--card:#162622;--ink:#e8f1ee;--mute:#9bb3ad;--line:#2a3f3a;--brand:#3fbfa3;--gold:#e0b04f;--grid:#2a3f3a;color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.35}
-main{max-width:560px;margin:0 auto;padding:20px 14px 50px}
-h1{font-family:Georgia,"Times New Roman",serif;font-size:1.7rem;margin:0 0 2px}
-.sub{color:var(--mute);margin:0 0 14px;font-size:.95rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
-.row{display:flex;gap:8px}
-input{flex:1;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-width:0}
-button{font:inherit;font-weight:700;padding:12px 16px;border:0;border-radius:10px;background:var(--brand);color:#fff;cursor:pointer}
-button.off{background:none;border:1px solid var(--line);color:var(--mute)}
-.st{margin:10px 0 0;font-size:.95rem;color:var(--mute)}
-svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:14px}
-.m{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:8px;cursor:pointer}
-.m.sel{outline:3px solid var(--gold)}
-.dot{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700}
-.mi{flex:1;min-width:0}.mn{font-weight:700}.md{color:var(--mute);font-size:.88rem}
-.m a{color:var(--brand);font-weight:700;text-decoration:none;font-size:.9rem;white-space:nowrap}
-.stale{opacity:.5}
-.note{color:var(--mute);font-size:.85rem;margin-top:14px}
-
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;max-width:640px;margin:0 auto;padding:12px 14px 0;background:var(--bg)}
-.tabs button{flex:1;background:var(--card);color:var(--mute);border:1px solid var(--line);font-weight:700;padding:12px}
-.tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
-section[hidden]{display:none}
 </style>
 </head>
 <body>
-<div class="tabs"><button id="tb1" class="on" type="button">✅ To-Do</button><button id="tb2" type="button">📍 Locations</button></div>
-<main id="tab1">
+<main>
 <h1>Event To-Do List</h1>
 <p class="sub">Tap an item to tick it when it’s done.</p>
 <div class="bar"><div class="fill" id="fill"></div></div>
@@ -80,22 +50,7 @@ section[hidden]{display:none}
 </form>
 <button class="btn ghost" id="r" type="button">Untick all</button>
 </main>
-<main id="tab2" hidden>
-<h1>Team Live Locations</h1>
-<p class="sub">Everyone opens this page, taps Start, and you all see each other.</p>
-
-<div class="card">
-<div class="row"><input id="nm" placeholder="Your name" maxlength="20" autocomplete="off"><button id="go">Start</button></div>
-<p class="st" id="st">Type your name, then tap Start and allow location.</p>
-</div>
-
-<svg id="map" viewBox="0 0 400 400" role="img" aria-label="Team positions"></svg>
-<p class="sub" style="margin:6px 2px 14px" id="scale">North is up.</p>
-
-<div id="plist"></div>
-<p class="note">Uses phone GPS, which can be 10–30 m off inside a big hall. Web pages cannot read Bluetooth positions. Keep the screen on while sharing.</p>
-</main>
-<script>(function(){
+<script>
 var KEY="event-todo-v1";
 var DEFAULT=["Check Chairs","Check Tables","Check Podium Decorations","Wall Lights & Sounds","Oil Lamp Matches & Mal Malaya","Table Clothes"];
 var items=DEFAULT.map(function(t,i){return{id:i+1,t:t,d:false}});
@@ -120,96 +75,6 @@ document.getElementById("b").onclick=add;
 document.getElementById("t").onkeydown=function(e){if(e.key==="Enter")add()};
 document.getElementById("r").onclick=function(){items.forEach(function(x){x.d=false});save();render()};
 render();
-})();</script>
-<script>(function(){
-var room=null,peers=[],me=null,sel=null,watchId=null,wl=null;
-var $=function(i){return document.getElementById(i)};
-var COL=["#0f5c4d","#b3472f","#2d5fa8","#8a4fa0","#a67a12","#1f7a8c","#5b6b2a","#a03d6b"];
-function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||"";localStorage.setItem(k,v)}catch(e){return""}}
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function col(n){var h=0;for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return COL[h%COL.length]}
-function dist(a,b){var R=6371000,r=Math.PI/180,dl=(b.lat-a.lat)*r,dg=(b.lng-a.lng)*r;
-var x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dg/2)*Math.sin(dg/2);return 2*R*Math.asin(Math.sqrt(x))}
-function ago(t){var s=Math.max(0,Math.round((Date.now()-t)/1000));return s<60?s+" s ago":Math.round(s/60)+" min ago"}
-function fm(m){return m<1000?Math.round(m)+" m":(m/1000).toFixed(2)+" km"}
-$("nm").value=ls("bmich-name");
-
-function members(){
-var out=[],seen={};
-peers.forEach(function(p){var d=p.presence||{};
-if(typeof d.lat==="number"&&typeof d.lng==="number"&&d.name){var k=p.isMe?"me":p.peer;seen[k]=1;
-out.push({id:p.peer,name:String(d.name).slice(0,20),lat:d.lat,lng:d.lng,acc:d.acc||0,t:d.t||p.updatedAt,me:!!p.isMe})}});
-if(me&&!seen.me)out.push({id:"me",name:me.name,lat:me.lat,lng:me.lng,acc:me.acc,t:me.t,me:true});
-return out}
-
-function render(){
-var ms=members(),mine=ms.filter(function(x){return x.me})[0]||null;
-var waiting=peers.filter(function(p){return !p.isMe&&!(p.presence&&typeof p.presence.lat==="number")}).length;
-drawMap(ms,mine);
-var h="";
-ms.sort(function(a,b){return a.me?-1:b.me?1:a.name.localeCompare(b.name)});
-ms.forEach(function(m){
-var d=mine&&!m.me?fm(dist(mine,m))+" away · ":"";
-h+='<div class="m'+(sel===m.id?" sel":"")+((Date.now()-m.t>90000)?" stale":"")+'" data-id="'+esc(m.id)+'"><div class="dot" style="background:'+col(m.name)+'">'+esc(m.name.charAt(0).toUpperCase())+'</div><div class="mi"><div class="mn">'+esc(m.name)+(m.me?" (you)":"")+'</div><div class="md">'+d+'updated '+ago(m.t)+' · ±'+Math.round(m.acc)+' m</div></div><a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+m.lat+","+m.lng+'">Map</a></div>'});
-if(!ms.length)h='<div class="card md">No one is sharing yet.</div>';
-if(waiting)h+='<p class="note">'+waiting+" more joined, waiting for their location…</p>";
-$("plist").innerHTML=h;
-[].forEach.call(document.querySelectorAll(".m"),function(e){e.onclick=function(ev){if(ev.target.tagName==="A")return;var i=e.getAttribute("data-id");sel=(sel===i?null:i);render()}})}
-
-function drawMap(ms,mine){
-var s=$("map");
-if(!ms.length){s.innerHTML='<text x="200" y="200" text-anchor="middle" fill="var(--mute)" font-size="16">Waiting for locations…</text>';$("scale").textContent="North is up.";return}
-var la=0,lg=0;ms.forEach(function(m){la+=m.lat;lg+=m.lng});la/=ms.length;lg/=ms.length;
-var kx=111320*Math.cos(la*Math.PI/180),ky=110574;
-ms.forEach(function(m){m.x=(m.lng-lg)*kx;m.y=-(m.lat-la)*ky});
-var R=25;ms.forEach(function(m){R=Math.max(R,Math.sqrt(m.x*m.x+m.y*m.y))});R*=1.3;
-var k=165/R,nice=[5,10,20,50,100,200,500,1000,2000,5000],st=nice[nice.length-1];
-for(var i=0;i<nice.length;i++){if(nice[i]>=R/2.5){st=nice[i];break}}
-var o='<line x1="200" y1="10" x2="200" y2="390" stroke="var(--grid)"/><line x1="10" y1="200" x2="390" y2="200" stroke="var(--grid)"/>';
-for(var r=st;r*k<=190;r+=st){o+='<circle cx="200" cy="200" r="'+(r*k)+'" fill="none" stroke="var(--grid)" stroke-dasharray="4 4"/><text x="'+(200+r*k+3)+'" y="196" font-size="11" fill="var(--mute)">'+fm(r)+'</text>'}
-o+='<text x="200" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="var(--mute)">N</text>';
-var sm=ms.filter(function(m){return m.id===sel})[0];
-if(sm&&mine&&sm!==mine)o+='<line x1="'+(200+mine.x*k)+'" y1="'+(200+mine.y*k)+'" x2="'+(200+sm.x*k)+'" y2="'+(200+sm.y*k)+'" stroke="var(--gold)" stroke-width="3" stroke-dasharray="6 4"/>';
-ms.forEach(function(m){var cx=200+m.x*k,cy=200+m.y*k,c=col(m.name),old=Date.now()-m.t>90000;
-o+='<g opacity="'+(old?.45:1)+'">';
-if(m.id===sel)o+='<circle cx="'+cx+'" cy="'+cy+'" r="26" fill="none" stroke="var(--gold)" stroke-width="4"><animate attributeName="r" values="18;30;18" dur="1.4s" repeatCount="indefinite"/></circle>';
-if(m.me)o+='<circle cx="'+cx+'" cy="'+cy+'" r="20" fill="none" stroke="'+c+'" stroke-width="2"/>';
-o+='<circle cx="'+cx+'" cy="'+cy+'" r="14" fill="'+c+'" stroke="#fff" stroke-width="2"/><text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">'+esc(m.name.charAt(0).toUpperCase())+'</text><text x="'+cx+'" y="'+(cy+32)+'" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">'+esc(m.name)+'</text></g>'});
-s.innerHTML=o;
-$("scale").textContent="North is up. Rings every "+fm(st)+". Tap a name below to highlight and draw a line from you."}
-
-function share(pos,name){
-var c=pos.coords;me={name:name,lat:c.latitude,lng:c.longitude,acc:c.accuracy,t:Date.now()};
-if(room)room.presence({name:name,lat:+c.latitude.toFixed(6),lng:+c.longitude.toFixed(6),acc:Math.round(c.accuracy),t:Date.now()}).catch(function(){});
-$("st").textContent="Sharing live. Accuracy about ±"+Math.round(c.accuracy)+" m."+(room?"":" Team view needs you to be signed in to Claude.");
-render()}
-
-function start(){
-var n=$("nm").value.trim();if(!n){$("st").textContent="Please type your name first.";return}
-ls("bmich-name",n);
-if(!navigator.geolocation){$("st").textContent="This browser has no location support.";return}
-$("st").textContent="Finding your location…";
-watchId=navigator.geolocation.watchPosition(function(p){share(p,n)},function(e){
-$("st").textContent=e.code===1?"Location is blocked. Allow location for this page in your phone settings.":"Cannot get location yet. Move near a window or open area."},
-{enableHighAccuracy:true,maximumAge:2000,timeout:20000});
-try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(function(w){wl=w}).catch(function(){})}catch(e){}
-$("go").textContent="Stop";$("go").className="off"}
-
-function stop(){
-if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;
-try{if(wl)wl.release()}catch(e){}
-me=null;if(room)room.presence({lat:null,lng:null,acc:null,t:null,name:null}).catch(function(){});
-$("go").textContent="Start";$("go").className="";$("st").textContent="Stopped sharing.";render()}
-
-$("go").onclick=function(){watchId===null?start():stop()};
-render();
-setInterval(render,15000);
-if(window.claude&&claude.use){claude.use("room").then(function(r){room=r;if(r){r.onPeers(function(c){peers=c.peers;render()},function(){});if(me)share({coords:{latitude:me.lat,longitude:me.lng,accuracy:me.acc}},me.name)}}).catch(function(){})}
-})();</script>
-<script>
-(function(){function s(n){document.getElementById("tab1").hidden=n!==1;document.getElementById("tab2").hidden=n!==2;
-document.getElementById("tb1").className=n===1?"on":"";document.getElementById("tb2").className=n===2?"on":"";window.scrollTo(0,0)}
-document.getElementById("tb1").onclick=function(){s(1)};document.getElementById("tb2").onclick=function(){s(2)}})();
 </script>
 </body>
 </html>
